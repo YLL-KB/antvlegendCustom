@@ -1,0 +1,11 @@
+.title {
+  background: #79f29d;
+}
+.legendCustom {
+  margin: 10px;
+}
+.legendCustom:active {
+  background-color: #bfbfbf;
+  width: 65px;
+  border-radius: 8px;
+}
