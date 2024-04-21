@@ -1,10 +1,10 @@
 {
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "prettier.insertPragma": true,
-    "prettier.requireConfig": true,
-    "prettier.singleAttributePerLine": true,
-    "prettier.withNodeModules": true,
-    "prettier.requirePragma": true
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "prettier.insertPragma": true,
+  "prettier.requireConfig": true,
+  "prettier.singleAttributePerLine": true,
+  "prettier.withNodeModules": true,
+  "prettier.requirePragma": true
 }
