@@ -1,11 +1,13 @@
-import styles from './index.less';
-import React, { useEffect, useRef, useState } from 'react';
-import { isObject, deepMix, set } from '@antv/util';
+import React, { useEffect, useRef, useState, forwardRef } from 'react';
 import { Pie, measureTextWidth, P, G2 } from '@antv/g2plot';
 import { Badge, Col, Row } from 'antd';
-import { log } from '@antv/g2plot/lib/utils';
+import styles from '../index.less';
 
-export default function IndexPage() {
+const PieDemo = forwardRef((props: any, ref) => {
+  const { data, id, Data, setThreeUpData } = props;
+
+  // console.log(data, DataRef, 'data');
+
   function renderStatistic(
     containerWidth: number,
     text: string,
@@ -46,25 +48,16 @@ export default function IndexPage() {
     '#DAD5B5',
   ];
 
-  const [g2plotData, setG2plotData] = useState<any[]>([]);
-  const data: any = [
-    { type: '分类一', value: 27 },
-    { type: '分类二', value: 25 },
-    { type: '分类三', value: 18 },
-    { type: '分类四', value: 15 },
-    { type: '分类五', value: 10 },
-    { type: '其他', value: 5 },
-  ];
   const config: any = {
     appendPadding: 10,
-    data: data,
+    data: data && data,
     angleField: 'value',
     colorField: 'type',
     radius: 1,
     innerRadius: 0.64,
     meta: {
       value: {
-        formatter: (v) => `${v} ¥`,
+        formatter: (v: any) => `${v} ¥`,
       },
     },
     label: {
@@ -110,23 +103,25 @@ export default function IndexPage() {
       { type: 'pie-statistic-active' },
     ],
   };
-  const piePlot = useRef<any>(null);
+
   useEffect(() => {
-    if (piePlot.current) {
-      piePlot.current = new Pie('container', config);
-      piePlot.current.render();
+    if (ref.current) {
+      ref.current = new Pie(id, config);
+      ref.current.render();
     }
-  }, []);
-  // useEffect(())
+  }, [ref]);
+
+  useEffect(() => {
+    if (Data.length > 0) {
+      // debugger;
+      ref.current.update({ data: Data });
+    }
+  }, [Data]);
   return (
     <div>
       <Row>
-        <Col span={12}></Col>
-        <Col span={12}></Col>
-      </Row>
-      <Row>
         <Col span={18}>
-          <div id="container" ref={piePlot} />
+          <div id={id} ref={ref} />
         </Col>
         <Col span={6} style={{ marginTop: '150px' }}>
           <div
@@ -135,7 +130,7 @@ export default function IndexPage() {
               // console.log(item, 'item');
               // setG2plotData([item]);
 
-              piePlot.current.update(config);
+              ref.current.update(config);
             }}
           >
             <span style={{ margin: '5px' }}>
@@ -143,33 +138,37 @@ export default function IndexPage() {
             </span>
             全选
           </div>
-          {data?.map((item: any, index: number) => {
-            return (
-              <div
-                key={item.type}
-                onClick={() => {
-                  // console.log(item, 'item');
-                  // setG2plotData([item]);
-                  const itemData: any = data.filter(
-                    (i: { type: any }) => i.type === item.type,
-                  );
-                  setG2plotData(itemData);
-                  piePlot.current.update({
-                    data: itemData,
-                    color: color[index],
-                  });
-                }}
-                className={styles.legendCustom}
-              >
-                <span style={{ margin: '5px' }}>
-                  <Badge key={color[index]} color={color[index]} />
-                </span>
-                <span>{item.type}</span>
-              </div>
-            );
-          })}
+          {data &&
+            data?.map((item: any, index: number) => {
+              return (
+                <div
+                  key={item.type}
+                  onClick={() => {
+                    console.log(item, 'item');
+                    // setG2plotData([item]);
+                    const itemData: any = data.filter(
+                      (i: { type: any }) => i.type === item.type,
+                    );
+                    setThreeUpData(item.data);
+                    // setG2plotData(itemData);
+                    ref.current.update({
+                      data: itemData,
+                      color: color[index],
+                    });
+                  }}
+                  className={styles.legendCustom}
+                >
+                  <span style={{ margin: '5px' }}>
+                    <Badge key={color[index]} color={color[index]} />
+                  </span>
+                  <span>{item.type}</span>
+                </div>
+              );
+            })}
         </Col>
       </Row>
     </div>
   );
-}
+});
+
+export default PieDemo;
